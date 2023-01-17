@@ -1,6 +1,6 @@
 package com.example.tacocloud.tacos;
 
-import com.example.tacocloud.jdbc.JdbcOrderRepository;
+import com.example.tacocloud.jdbc.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import javax.validation.Valid;
+import java.util.Date;
 
 @RequestMapping("/orders")
 @Controller
@@ -19,10 +20,10 @@ import javax.validation.Valid;
 @SessionAttributes("tacoOrder")
 public class OrderController {
 
-    private final JdbcOrderRepository jdbcOrderRepository;
+    private final OrderRepository orderRepository;
     @Autowired
-    public OrderController(JdbcOrderRepository jdbcOrderRepository){
-        this.jdbcOrderRepository = jdbcOrderRepository;
+    public OrderController(OrderRepository orderRepository){
+        this.orderRepository = orderRepository;
     }
     @GetMapping("/current")
     public String orderForm() {
@@ -34,7 +35,8 @@ public class OrderController {
         if(errors.hasErrors()){
             return "orderForm";
         }
-        jdbcOrderRepository.save(order);
+        order.setPlacedAt(new Date());
+        orderRepository.save(order);
         log.info("Order submitted: {}", order);
         sessionStatus.setComplete();
         return "redirect:/";
