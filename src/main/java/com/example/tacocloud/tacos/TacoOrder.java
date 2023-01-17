@@ -3,14 +3,16 @@ package com.example.tacocloud.tacos;
 import lombok.Data;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
-public class TacoOrder {
+public class TacoOrder implements Serializable {
+    private long id;
+    private Date placedAt;
     @NotBlank(message = "Name is required")
     private String deliveryName;
     @NotBlank(message = "Street is required")
@@ -18,6 +20,7 @@ public class TacoOrder {
     @NotBlank(message = "City is required")
     private String deliveryCity;
     @NotBlank(message = "State is required")
+    @Size(max = 2, message = "Please enter the abbreviated state!")
     private String deliveryState;
     @NotBlank(message = "Zip is required")
     private String deliveryZip;
